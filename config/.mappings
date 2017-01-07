@@ -1,0 +1,28 @@
+# vim: set ft=toml ts=2 sw=2 et :
+
+[general]
+git         = "~/.config/git"
+hgrc        = "~/.hgrc"
+zsh         = "~/.zsh.d"
+zshenv      = "~/.zshenv"
+zprofile    = "~/.zprofile"
+zshrc       = "~/.zshrc"
+zlogin      = "~/.zlogin"
+zlogout     = "~/.zlogout"
+vim         = "~/.vim"
+"tmux.conf" = "~/.tmux.conf"
+ghqconfig   = "~/.ghqconfig"
+
+[windows]
+"console.xml"          = "$APPDATA/Console/console.xml"
+mintty                 = "~/.config/mintty"
+powershell             = "~/Documents/WindowsPowerShell"
+# "vscode/settings.json" = "$APPDATA/Code/User/settings.json"
+# "vscode/locale.json"   = "$APPDATA/Code/User/locale.json"
+
+[linux]
+Xdefaults      = "~/.Xdefaults"
+"vnc/config"   = "~/.vnc/config"
+"vnc/xstartup" = "~/.vnc/xstartup"
+matplotlib     = "~/.config/matplotlib"
+systemd        = "~/.config/systemd"

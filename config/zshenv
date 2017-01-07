@@ -1,0 +1,18 @@
+# vim: set ft=zsh ts=2 sw=2 et :
+
+case $OSTYPE in
+  *msys*)
+    # avoid wrong behaviour related to Gvim's plugin manager
+    unset SHELL
+
+    # change codepage for Win-native tools
+    chcp.com 65001 > /dev/null
+
+    # overwrite environment variables before /etc/profile loaded
+    export MSYS=${MSYS:-winsymlinks:nativestrict}
+    export MSYSTEM=${MSYSTEM:-MINGW64}
+    export MSYS2_PATH_TYPE=${MSYS2_PATH_TYPE:-minimal}
+    ;;
+esac
+
+umask 022

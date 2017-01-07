@@ -1,0 +1,174 @@
+scriptencoding utf-8
+filetype plugin indent on
+
+call plug#util#install()
+call plug#begin('~/.vim/plugged')
+
+" General
+Plug 'vim-scripts/Align'
+Plug 'tomtom/tcomment_vim'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'bronson/vim-trailing-whitespace'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'thinca/vim-quickrun'
+
+" Appearance
+Plug 'chriskempson/vim-tomorrow-theme'
+Plug 'junegunn/seoul256.vim'
+Plug 'rakr/vim-two-firewatch'
+Plug 'acepukas/vim-zenburn'
+Plug 'joshdick/onedark.vim'
+Plug 'jordwalke/flatlandia'
+Plug 'reedes/vim-colors-pencil'
+Plug 'jacoborus/tender.vim'
+Plug 'ubnt-intrepid/vim-colors-japanesque'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+if has('gui')
+  Plug 'vim-scripts/zoom.vim'
+endif
+
+" Neocomplete
+Plug 'neomake/neomake'
+let g:neomake_open_list = 2
+let g:neomake_error_sign   = { 'text': 'x', 'texthl': 'NeomakeErrorSign'}
+let g:neomake_warning_sign = { 'text': '!', 'texthl': 'NeomakeWarningSign' }
+let g:neomake_message_sign = { 'text': '>', 'texthl': 'NeomakeMessageSign' }
+let g:neomake_info_sign    = { 'text': 'i', 'texthl': 'NeomakeInfoSign' }
+
+if has('lua')
+  Plug 'Shougo/vimproc.vim', { 'do': 'make' }
+  Plug 'Shougo/neocomplete.vim'
+endif
+
+Plug 'cespare/vim-toml'
+Plug 'tmux-plugins/vim-tmux'
+
+" TypeScript
+Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
+Plug 'Quramy/tsuquyomi', { 'for': 'typescript' }
+
+Plug 'rust-lang/rust.vim'   , { 'for': 'rust' }
+Plug 'racer-rust/vim-racer' , { 'for': 'rust' }
+Plug 'ubnt-intrepid/rustup.vim'
+" Plug '~/repos/github.com/ubnt-intrepid/rustup.vim'
+
+Plug 'fatih/vim-go'
+
+" Plug 'jmcantrell/vim-virtualenv'
+" Plug 'davidhalter/jedi-vim'
+
+Plug 'justmao945/vim-clang',  { 'for': ['c', 'cpp'] }
+Plug 'Shougo/neoinclude.vim', { 'for': ['c', 'cpp'] }
+
+if executable('opam')
+  Plug 'ocaml/merlin',           { 'for': 'ocaml', 'rtp': 'vim/merlin' }
+  Plug 'let-def/ocp-indent-vim', { 'for': 'ocaml' }
+endif
+
+Plug 'idanarye/vim-dutyl', { 'for': 'd' }
+let g:dutyl_stdImportPaths=['/usr/include/dmd']
+
+call plug#end()
+
+
+set encoding=utf-8
+set termencoding=utf-8
+set fileencodings=utf-8,cp932,euc-jp,ucs-bom,iso-2022-jp,default,latin
+
+set shortmess+=It
+
+set notimeout
+set ttimeout
+set timeoutlen=100
+set ttimeoutlen=75
+
+set nobackup
+set noswapfile
+set noundofile
+
+set modeline
+
+set clipboard=unnamed,autoselect
+
+set foldmethod=marker
+set foldcolumn=3
+set foldtext=MyFoldText()
+function! MyFoldText()
+  return getline(v:foldstart)
+endfunction
+
+set tabstop=2
+set shiftwidth=2
+set expandtab
+set noautoindent
+set nosmartindent
+set nowrap
+
+if !has('win32') && !has('win64')
+  set cursorline
+endif
+set laststatus=2
+set splitright
+set shellslash
+set nonumber
+set termguicolors
+set fillchars=vert:\|
+
+" disable bell
+set belloff=all
+
+" Cygwin/MSYS2 環境下で Normal/Insert 時のカーソルを切り替える
+if !has('gui')
+ let &t_ti.="\e[1 q"
+ let &t_SI.="\e[5 q"
+ let &t_EI.="\e[1 q"
+ let &t_te.="\e[0 q"
+endif
+
+" Tmux の背景描画対策
+set t_ut=
+
+
+""" Tabline
+set showtabline=2
+set tabline=%!tabline#make_tabline()
+augroup TabLine
+  autocmd!
+  autocmd VimEnter * call tabline#make_tabline()
+augroup END
+
+
+" viminfo のファイル名を `~/.viminfo` に強制
+execute 'set viminfo+=n' . substitute('$HOME/.vim/viminfo', '\\', '/', 'g')
+
+command! Tig  execute 'silent !tig' | redraw!
+
+" Additional key binds {{{
+nnoremap Q q
+
+" 改行を挿入
+nnoremap O :<C-u> call append(expand('.'), '')<CR>j
+" }}}
+
+syntax on
+if has('gui')
+  call colorscheme#change('two-firewatch', 'light')
+  let g:airline_theme = 'twofirewatch'
+else
+  call colorscheme#change('two-firewatch', 'light')
+  let g:airline_theme = 'twofirewatch'
+endif
+
+highlight Keyword  cterm=bold gui=bold
+highlight Constant cterm=bold gui=bold
+highlight Type     cterm=bold gui=bold
+
+
+" reload vimrc after saving {{{
+augroup reload_vimrc
+  autocmd!
+  autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
+augroup END
+" }}}

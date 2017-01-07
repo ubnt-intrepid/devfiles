@@ -14,5 +14,5 @@
     - systemd
     - fzf
     - misc
-    - tools
-    - dotfiles
+    # - tools
+    # - dotfiles
