@@ -1,4 +1,0 @@
----
-- name: Install python and dependencies for ansible modules
-  become_user: root
-  raw: dnf install -y python2 python2-dnf libselinux-python

@@ -1,9 +1,0 @@
----
-- name: Install user configurations
-  git:
-    repo: https://github.com/ubnt-intrepid/dot.rs.git
-    dest: $HOME/.dotfiles
-    version: master
-
-- name: Apply links
-  command: $HOME/.local/bin/dot link
