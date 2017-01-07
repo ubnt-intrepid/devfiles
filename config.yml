@@ -1,0 +1,6 @@
+dotfiles: https://github.com/ubnt-intrepid/dotfiles.git
+working_dir: c:/work
+memory: 4096
+cpus: 2
+run_ansible: false
+enable_bridge: true
