@@ -1,0 +1,4 @@
+---
+- name: Executes systemd user instance automatically
+  become_user: root
+  command: loginctl enable-linger vagrant

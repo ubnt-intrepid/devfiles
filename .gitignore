@@ -1,0 +1,6 @@
+.ssh_config
+.gitconfig
+.git-credentials
+.vagrant/
+*.log
+package.box

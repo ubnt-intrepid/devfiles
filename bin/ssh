@@ -1,0 +1,13 @@
+#!/bin/bash -e
+
+script_root="$(dirname $BASH_SOURCE)"
+
+[[ -f "$script_root/.ssh_config" ]] || {
+  echo "Generating .ssh_config..."
+  vagrant ssh-config > "$script_root/.ssh_config"
+}
+
+/usr/bin/ssh \
+  -F "$script_root/.ssh_config" default \
+  -L 5901:localhost:5901 \
+  "$@"

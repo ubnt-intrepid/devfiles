@@ -1,0 +1,5 @@
+---
+- name: Install OPAM
+  shell: wget https://raw.github.com/ocaml/opam/master/shell/opam_installer.sh -O - | sh -s $HOME/.local/bin
+  args:
+    creates: "$HOME/.local/bin/opam"

@@ -1,0 +1,15 @@
+---
+- name: Install ghqrs
+  shell: $HOME/.cargo/bin/cargo install --git https://github.com/ubnt-intrepid/ghqrs.git --root $HOME/.local
+  args:
+    creates: "$HOME/.local/bin/ghqrs"
+
+- name: Install dot.rs
+  shell: $HOME/.cargo/bin/cargo install --git https://github.com/ubnt-intrepid/dot.rs.git --root $HOME/.local
+  args:
+    creates: "$HOME/.local/bin/dot"
+
+- name: Install vcs_info
+  shell: $HOME/.cargo/bin/cargo install --git https://github.com/ubnt-intrepid/vcs_info.rs.git --root $HOME/.local
+  args:
+    creates: "$HOME/.local/bin/vcs_info"

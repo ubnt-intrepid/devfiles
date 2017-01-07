@@ -1,0 +1,15 @@
+---
+- name: Set timezone
+  become_user: root
+  file:
+    src:  "/usr/share/zoneinfo/Asia/Tokyo"
+    dest: "/etc/localtime"
+    state: link
+    force: yes
+    owner: root
+    group: root
+    mode: 644
+
+- name: Set shell of target user
+  become_user: root
+  command: chsh -s '/bin/zsh' vagrant
