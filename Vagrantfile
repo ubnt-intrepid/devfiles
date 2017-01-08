@@ -45,7 +45,7 @@ class UserConfig
     end
 
     config.vm.provision :shell, privileged: false, inline: <<-SHELL
-      sudo dnf install -y git
+      sudo dnf install -y ansible git
       if [[ ! -d $HOME/.dotfiles ]]; then
         git clone "#{@dotfiles}" $HOME/.dotfiles
       fi
@@ -53,8 +53,8 @@ class UserConfig
 
     if @run_ansible then
       config.vm.provision :ansible_local do |ansible|
-        ansible.playbook          = "/home/vagrant/.dotfiles/site.yml"
-        ansible.inventory_path    = "/home/vagrant/.dotfiles/hosts"
+        ansible.playbook          = "/home/vagrant/.dotfiles/playbook/site.yml"
+        ansible.inventory_path    = "/home/vagrant/.dotfiles/playbook/hosts"
         ansible.verbose           = true
         ansible.install           = true
         ansible.limit             = "all"
