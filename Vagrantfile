@@ -1,7 +1,20 @@
 # -*- mode: ruby -*-
-# vi: set ft=ruby :
+# vim: set ft=ruby ts=2 sw=2 et :
 
 require 'yaml'
+
+class MountEntry
+  def initialize(node)
+    @name = node['name']
+    @description = node['description']
+    @path = node['path'].gsub(/\$\w+/) { |m| ENV[m[1..-1]] }
+  end
+
+  def apply(config)
+    config.vm.synced_folder @path, "/mnt/#{@name}", \
+      mount_options: ['dmode=775', 'fmode=664']
+  end
+end
 
 class UserConfig
   def initialize(filename)
@@ -9,8 +22,8 @@ class UserConfig
 
     # The URL of repository which contains guest's configuration files (a.k.a 'dotfiles')
     @dotfiles = settings['dotfiles']
-    # Working directory of host PC
-    @working_dir = settings['working_dir']
+    # mount points of host PC
+    @mounts = settings['mounts'].map { |node| MountEntry.new(node) }
     # Memory size of guest VM
     @memory = settings['memory']
     # The number of CPUs of guest VM
@@ -36,7 +49,7 @@ class UserConfig
     end
 
     config.vm.synced_folder ".", "/vagrant", mount_options: ['dmode=775', 'fmode=664']
-    config.vm.synced_folder @working_dir, "/mnt/work", mount_options: ['dmode=775', 'fmode=664']
+    @mounts.each { |entry| entry.apply(config) }
 
     # config.vm.network "forwarded_port", guest:8888, host:8000
     # config.vm.network "private_network", ip: "192.168.56.101"
