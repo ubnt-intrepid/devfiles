@@ -58,7 +58,7 @@ class UserConfig
     end
 
     config.vm.provision :shell, privileged: false, inline: <<-SHELL
-      sudo dnf install -y ansible git
+      sudo dnf install -y git ansible python2 python2-dnf libselinux-python
       if [[ ! -d $HOME/.dotfiles ]]; then
         git clone "#{@dotfiles}" $HOME/.dotfiles
       fi
