@@ -6,13 +6,26 @@ require 'yaml'
 class MountEntry
   def initialize(node)
     @name = node['name']
-    @description = node['description']
     @path = node['path'].gsub(/\$\w+/) { |m| ENV[m[1..-1]] }
   end
 
   def apply(config)
     config.vm.synced_folder @path, "/mnt/#{@name}", \
       mount_options: ['dmode=775', 'fmode=664']
+  end
+end
+
+class NetworkEntry
+  def initialize(node)
+    @type = node['type']
+  end
+
+  def apply(config)
+    # config.vm.network "forwarded_port", guest:8888, host:8000
+    # config.vm.network "private_network", ip: "192.168.56.101"
+    if @type == "bridge" then
+      config.vm.network "public_network"
+    end
   end
 end
 
@@ -23,15 +36,9 @@ class UserConfig
     # The URL of repository which contains guest's configuration files (a.k.a 'dotfiles')
     @dotfiles = settings['dotfiles']
     # mount points of host PC
-    @mounts = settings['mounts'].map { |node| MountEntry.new(node) }
-    # Memory size of guest VM
-    @memory = settings['memory']
-    # The number of CPUs of guest VM
-    @cpus = settings['cpus']
-    # Provisioning by using ansible
-    @ansible = settings['ansible']
+    @mounts = settings['mount'].map { |node| MountEntry.new(node) }
     # Whether to use bridge network
-    @bridge = settings['bridge']
+    @networks = settings['network'].map { |node| NetworkEntry.new(node) }
     @tags = settings['tags'] or []
     @skip_tags = settings['skip_tags'] or []
   end
@@ -40,10 +47,10 @@ class UserConfig
     config.vm.box = "wholebits/fedora25-64"
 
     config.vm.provider "virtualbox" do |vb|
-      vb.memory = @memory
+      vb.memory = 4096
       vb.customize ["modifyvm", :id, "--audio", "null"]
       vb.customize ["modifyvm", :id, "--vram", "256"]
-      vb.customize ["modifyvm", :id, "--cpus", @cpus, "--ioapic", "on"]
+      vb.customize ["modifyvm", :id, "--cpus", 2, "--ioapic", "on"]
     end
 
     if Vagrant.has_plugin?("vagrant-vbguest") then
@@ -53,35 +60,27 @@ class UserConfig
     config.vm.synced_folder ".", "/vagrant", mount_options: ['dmode=775', 'fmode=664']
     @mounts.each { |entry| entry.apply(config) }
 
-    # config.vm.network "forwarded_port", guest:8888, host:8000
-    # config.vm.network "private_network", ip: "192.168.56.101"
-    if @bridge then
-      config.vm.network "public_network"
-    end
+    @networks.each { |entry| entry.apply(config) }
 
-    config.vm.provision :shell, privileged: false, inline: <<-SHELL
-      sudo dnf install -y git ansible python2 python2-dnf libselinux-python
-      if [[ ! -d $HOME/.dotfiles ]]; then
-        git clone "#{@dotfiles}" $HOME/.dotfiles
-      fi
+    config.vm.provision :shell, inline: <<-SHELL
+      dnf upgrade -y
+      dnf install -y git ansible python2 python2-dnf libselinux-python
     SHELL
 
-    if @ansible then
-      config.vm.provision :ansible_local do |ansible|
-        ansible.playbook          = "/home/vagrant/.dotfiles/playbook/site.yml"
-        ansible.inventory_path    = "/home/vagrant/.dotfiles/playbook/hosts"
-        ansible.verbose           = true
-        ansible.install           = true
-        ansible.limit             = "all"
-        ansible.tags              = @tags
-        ansible.skip_tags         = @skip_tags
-      end
+    config.vm.provision :shell, privileged: false, inline: <<-SHELL
+      [[ -d $HOME/.dotfiles ]] || git clone --recursive "#{@dotfiles}" $HOME/.dotfiles
+    SHELL
+
+    config.vm.provision :ansible_local do |ansible|
+      ansible.playbook          = "/home/vagrant/.dotfiles/playbook/site.yml"
+      ansible.inventory_path    = "/home/vagrant/.dotfiles/playbook/hosts"
+      ansible.install           = true
+      ansible.limit             = "all"
+      ansible.tags              = @tags
+      ansible.skip_tags         = @skip_tags
     end
 
-    config.vm.provision :file do |file|
-      file.source       = "~/.gitconfig"
-      file.destination  = "~/.gitconfig"
-    end
+    config.vm.provision :file, source: "~/.gitconfig", destination: "~/.gitconfig"
   end
 end
 

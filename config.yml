@@ -1,17 +1,12 @@
+# vim: set ft=yaml ts=2 sw=2 et :
+
 # VM
-cpus: 2
-memory: 4096
-bridge: false
-mounts:
-  - name: work
-    description: personal working directory
-    path: c:/work
-  - name: dropbox
-    description: Dropbox directory
-    path: $HOME/Dropbox
+mount:
+  - { name: work    , path: "c:/work" }
+  - { name: dropbox , path: "$HOME/Dropbox" }
+network:
+  - { type: bridge }
 
 # Provisioning
 dotfiles: https://github.com/ubnt-intrepid/dotfiles.git
-ansible: true
-skip_tags:
-  - huge
+skip_tags: [ 'huge' ]
