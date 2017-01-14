@@ -1,0 +1,20 @@
+language: c
+sudo: required
+dist: trusty
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y --no-install-recommends texlive-fonts-recommended texlive-latex-extra texlive-fonts-extra texlive-latex-recommended latexmk texlive-lang-cjk pandoc
+
+script:
+  - make all
+
+deploy:
+  provider: releases
+  file: build/main.pdf
+  skip_cleanup: true
+  on:
+    tags: true
+  api_key:
+    secure: [YOUR API KEY]
+ 

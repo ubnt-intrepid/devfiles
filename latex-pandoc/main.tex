@@ -1,0 +1,43 @@
+\documentclass[a4j,11pt,uplatex,dvipdfmx]{jsarticle}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{ascmac}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{newtxtext}
+% \usepackage{newtxmath}
+\usepackage{mathpazo}
+\usepackage{bm}
+\usepackage{lipsum}
+
+\newcommand{\argmin}{\mathop{\rm arg\:min\;}\limits}
+\newcommand{\argmax}{\mathop{\rm arg\:max\;}\limits}
+
+\begin{document}
+\title{Title}
+\author{Author Name}
+\date{\today}
+\maketitle
+
+日本語
+
+\section{Title}
+\lipsum[1-2]
+
+\subsection{Title2}
+\lipsum[3-5]
+
+\subsection{Title3}
+\lipsum[6-7]
+
+\input{src/article}
+
+\end{document}
+
+% To enable inverse-search of SumatraPDF, use following setting:
+% C:\Program Files (x86)\Microsoft VS Code\Code.exe --reuse-window --goto %f:%l:1
+
+% vim: set ts=2 sw=2 expandtab ft=tex foldmethod=marker :

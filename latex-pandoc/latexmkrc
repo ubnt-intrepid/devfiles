@@ -1,0 +1,31 @@
+#!/usr/bin/perl
+# vim: set ft=perl ts=2 sw=2 et :
+use File::Spec;
+
+$aux_dir = File::Spec->catfile(getcwd, 'build');
+$out_dir = $aux_dir;
+
+# Compiler options
+$latexargs  = '-synctex=1 -no-guess-input-enc -interaction=nonstopmode';
+
+$latex      = 'uplatex -kanji=utf8' . ' '.$latexargs;
+$dvipdf     = 'dvipdfmx %O -o %D %S';
+$pdf_mode   = 3;  # use dvipdf (0: without PDF, 1: use pdflatex, 2: use ps2pdf)
+$max_repeat = 5;  # platexの繰り返し回数の最大値
+
+# settings for another tools
+$bibtex     = 'upbibtex -kanji=utf8';
+$biber      = 'biber --bblencoding=utf-8 -u -U --output_safechars';
+
+# previewer settings
+if ($^O eq 'MSWin32') {
+  if (-f '"C:/Program Files (x86)/SumatraPDF/SumatraPDF.exe"') {
+    $pdf_previewer = '"C:/Program Files (x86)/SumatraPDF/SumatraPDF.exe" -reuse-instance';
+  }
+  elsif (-f '"C:/Program Files/SumatraPDF/SumatraPDF.exe"') {
+    $pdf_previewer = '"C:/Program Files/SumatraPDF/SumatraPDF.exe" -reuse-instance';
+  }
+} else {
+  $pdf_previewer = 'zathura';
+}
+$pvc_view_file_via_temporary = 0;

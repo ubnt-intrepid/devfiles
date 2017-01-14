@@ -1,0 +1,26 @@
+# vim: ft=python ts=4 sw=4 et :
+
+TOP = '.'
+OUT = 'build'
+
+from waflib.Tools import tex
+
+class dvipdf(tex.dvipdf):
+    run_str = '${DVIPDF} ${DVIPDFFLAGS} -o ${TGT} ${SRC}'
+
+
+def configure(conf):
+    conf.load('tex')
+    conf.env.LATEX      = 'platex'
+    conf.env.LATEXFLAGS =[ '-kanji=utf8', '-no-guess-input']
+    conf.env.BIBTEX     = 'upbibtex'
+    conf.env.DVIPDF     = 'dvipdfmx'
+
+
+def build(bld):
+    bld(features = 'tex',
+        type     = 'latex',
+        source   = 'main.tex',
+        outs     = 'pdf',
+        prompt   = 1,
+    )

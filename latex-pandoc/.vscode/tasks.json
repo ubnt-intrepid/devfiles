@@ -1,0 +1,20 @@
+{
+  "version": "0.1.0",
+  "showOutput": "always",
+  "windows": {
+    "command": "powershell",
+    "args": ["-noprofile", "${workspaceRoot}/latexmk.ps1"],
+    "isShellCommand": true
+  },
+  "tasks": [
+    { "taskName": "build",
+      "isBuildCommand": true,
+      "isWatching": true },
+
+    { "taskName": "preview",
+      "isBuildCommand": true,
+      "isWatching": true },
+
+    { "taskName": "clean" }
+  ]
+}
