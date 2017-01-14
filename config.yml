@@ -1,0 +1,17 @@
+# vim: set ft=yaml ts=2 sw=2 et :
+
+dotfiles: https://github.com/ubnt-intrepid/dotfiles.git
+tags: []
+skip_tags:
+  - huge
+
+mount:
+  - name: work
+    path: c:/work
+  - name: dropbox
+    path: $HOME/Dropbox
+
+network:
+  - type: bridge
+
+
