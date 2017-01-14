@@ -1,4 +1,7 @@
-dotfiles: https://github.com/ubnt-intrepid/dotfiles.git
+# VM
+cpus: 2
+memory: 4096
+bridge: false
 mounts:
   - name: work
     description: personal working directory
@@ -6,7 +9,9 @@ mounts:
   - name: dropbox
     description: Dropbox directory
     path: $HOME/Dropbox
-memory: 4096
-cpus: 2
-run_ansible: true
-enable_bridge: false
+
+# Provisioning
+dotfiles: https://github.com/ubnt-intrepid/dotfiles.git
+ansible: true
+skip_tags:
+  - huge

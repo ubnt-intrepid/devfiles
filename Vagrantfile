@@ -29,9 +29,11 @@ class UserConfig
     # The number of CPUs of guest VM
     @cpus = settings['cpus']
     # Provisioning by using ansible
-    @run_ansible = settings['run_ansible']
+    @ansible = settings['ansible']
     # Whether to use bridge network
-    @enable_bridge = settings['enable_bridge']
+    @bridge = settings['bridge']
+    @tags = settings['tags'] or []
+    @skip_tags = settings['skip_tags'] or []
   end
 
   def apply(config)
@@ -53,7 +55,7 @@ class UserConfig
 
     # config.vm.network "forwarded_port", guest:8888, host:8000
     # config.vm.network "private_network", ip: "192.168.56.101"
-    if @enable_bridge then
+    if @bridge then
       config.vm.network "public_network"
     end
 
@@ -64,14 +66,21 @@ class UserConfig
       fi
     SHELL
 
-    if @run_ansible then
+    if @ansible then
       config.vm.provision :ansible_local do |ansible|
         ansible.playbook          = "/home/vagrant/.dotfiles/playbook/site.yml"
         ansible.inventory_path    = "/home/vagrant/.dotfiles/playbook/hosts"
         ansible.verbose           = true
         ansible.install           = true
         ansible.limit             = "all"
+        ansible.tags              = @tags
+        ansible.skip_tags         = @skip_tags
       end
+    end
+
+    config.vm.provision :file do |file|
+      file.source       = "~/.gitconfig"
+      file.destination  = "~/.gitconfig"
     end
   end
 end
