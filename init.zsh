@@ -1,11 +1,7 @@
-#!/bin/zsh
+# vim: set ft=zsh ts=2 sw=2 et :
 
-function template-apply() {
-  echo "not implemented"
-}
+export TEMPLATE_PLUGIN_ROOT="$(dirname ${(%):-%N})"
 
 function template-list() {
-  echo "not implemented"
+  ls --color=no "${TEMPLATE_PLUGIN_ROOT}/templates/" | sed -e 's|/$||'
 }
-
-# vim: set ft=zsh ts=2 sw=2 et :
