@@ -38,8 +38,8 @@ class UserConfig
     @dotfiles   = settings['dotfiles']
     @mounts     = settings['mount'].map { |node| MountEntry.new(node) }
     @networks   = settings['network'].map { |node| NetworkEntry.new(node) }
-    @tags       = settings['tags'] or []
-    @skip_tags  = settings['skip_tags'] or []
+    @tags       = settings['tags']
+    @skip_tags  = settings['skip_tags']
   end
 
   def apply(config)
@@ -70,8 +70,12 @@ class UserConfig
       ansible.inventory_path    = "/home/vagrant/.dotfiles/playbook/hosts"
       ansible.install           = true
       ansible.limit             = "all"
-      ansible.tags              = @tags
-      ansible.skip_tags         = @skip_tags
+      if @tags != nil then
+        ansible.tags            = @tags
+      end
+      if @skip_tags != nil then
+        ansible.skip_tags       = @skip_tags
+      end
     end
 
     # copy .gitconfig located at host's home directory to guest's home
